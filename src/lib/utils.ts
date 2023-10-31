@@ -161,20 +161,22 @@ export const calculateTotalAmount = (sessions:Session[]) =>{
   return totalAmount;
 }
 
-export const getAuthCookies = () => {
-    const cookies:any = document.cookie.split(';');
-    const specificCookies:any = {};
 
-    for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
+export const saveToken = () => {
+  const currentUrl = window.location.href;
 
-        // Check if the cookie starts with the specified names
-        if (cookie.startsWith('jwt_token=')) {
-            const [name, value] = cookie.split('=');
-            specificCookies[name] = value;
-        }
-    }
+  const url = new URL(currentUrl);
 
-    return specificCookies;
+  if (url.searchParams.has("token")) {
+    // Get the value of the "token" parameter
+    const token = url.searchParams.get("token");
+
+    localStorage.setItem("jwt_token", token);
+
+    url.searchParams.delete("token");
+    
+    history.replaceState(null, "", url.toString());
+
+  }
 }
 

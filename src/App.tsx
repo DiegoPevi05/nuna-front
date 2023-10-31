@@ -8,7 +8,7 @@ import Payment from './pages/payment';
 import PaymentResponse from './pages/paymentResponse';
 import  LoadingComponent from './components/ui/Loader';
 import {HashRouter as Router, Routes, Route} from 'react-router-dom';
-import {getAuthCookies} from './lib/utils';
+import {saveToken} from './lib/utils';
 import {toast} from "react-hot-toast";
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
@@ -27,7 +27,6 @@ function App() {
         }
       }
       const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/auth/user-profile',config);
-      console.log(response.data);
       if(response.data){
         dispatch({ type: 'SET_USER', payload: response.data })
       }
@@ -40,12 +39,9 @@ function App() {
 
   useEffect(()=>{
     setLoading(true);
-    const auth_cookies = getAuthCookies();
-    if(Object.keys(auth_cookies).length > 0){
-      console.log(auth_cookies);
-      console.log(auth_cookies['jwt_token']);
-      getUserFromServer(auth_cookies['jwt_token']);
-    } 
+    saveToken();
+    const token = localStorage.getItem('jwt_token');
+    getUserFromServer(token);
   },[])
 
   return (
