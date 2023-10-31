@@ -19,7 +19,11 @@ function App() {
   const [Loading,setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   //axios to call api and get data
-  const getUserFromServer = async (jwt_token:string) => {
+  const getUserFromServer = async (jwt_token:string|null) => {
+    if(jwt_token === null){
+      return;
+    }
+
     try {
       const config = {
         headers: {

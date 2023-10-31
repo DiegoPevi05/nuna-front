@@ -168,15 +168,15 @@ export const saveToken = () => {
   const url = new URL(currentUrl);
 
   if (url.searchParams.has("token")) {
-    // Get the value of the "token" parameter
-    const token = url.searchParams.get("token");
+      const token = url.searchParams.get("token");
 
-    localStorage.setItem("jwt_token", token);
+      if (token !== null) {
+        localStorage.setItem("jwt_token", token);
+      }
 
-    url.searchParams.delete("token");
-    
-    history.replaceState(null, "", url.toString());
-
+      url.searchParams.delete("token");
+      
+      history.replaceState(null, "", url.toString());
   }
 }
 
