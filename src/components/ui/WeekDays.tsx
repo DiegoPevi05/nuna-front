@@ -4,38 +4,28 @@ import { ChevronRight, ChevronLeft } from 'lucide-react';
 
 interface WeekProps {
   activeDay:Date;
+  daysShow:number;
+  activeWeek:number;
+  onChangeActiveWeek:(item:number) => void
   onChangeDay: (itemt: Date) => void;
 }
 
 const DAYS_OF_THE_WEEK = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
 
-const WeekDayComponent: FC<WeekProps> = ({activeDay,onChangeDay }) => {
+const WeekDayComponent: FC<WeekProps> = ({activeDay,onChangeDay,daysShow,activeWeek,onChangeActiveWeek }) => {
 
-  const [activeWeek,setActiveWeek] = useState<number>(0);
   const [WeekDays,setWeekDays] = useState<Date[]>([]);
 
-
-  const [DaysShow,setDaysShow] = useState<number>(7);
-
   useEffect(() => {
-    if (window.innerWidth < 640) {
-      setDaysShow(3)
-    } else {
-      setDaysShow(7)
-    }
-  }, [window.innerWidth])
-
-
-  useEffect(() => {
-    setWeekDays(getCurrentDays(DaysShow,activeWeek));
-  }, [activeWeek,DaysShow]);
+    setWeekDays(getCurrentDays(daysShow,activeWeek));
+  }, [activeWeek,daysShow]);
 
   const previousWeek = useCallback(() => {
-    setActiveWeek((activeWeek - 1) < 0 ? activeWeek : activeWeek - 1 );
+    onChangeActiveWeek((activeWeek - 1) < 0 ? activeWeek : activeWeek - 1 );
   },[activeWeek])
 
   const nextWeek = useCallback(() => {
-    setActiveWeek(activeWeek + 1);
+    onChangeActiveWeek(activeWeek + 1);
   },[activeWeek])
 
 

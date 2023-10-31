@@ -20,6 +20,21 @@ const Specialists = () => {
     const [LoadingState,setLoadingState] = useState<boolean>(false);
     const [activeDay,setActiveDay] = useState<Date>(new Date());
 
+    const [activeWeek,setActiveWeek] = useState<number>(0);
+    const [DaysShow,setDaysShow] = useState<number>(7);
+
+    useEffect(() => {
+      if (window.innerWidth < 640) {
+        setDaysShow(3)
+      } else {
+        setDaysShow(7)
+      }
+    }, [window.innerWidth])
+
+    const ChangeActiveWeek = useCallback((week: any) => {
+      setActiveWeek(week);
+    },[])
+
     const handleChangeDay = useCallback((date:Date) => {
       setLoadingState(true);
       setActiveDay(date)
@@ -30,9 +45,9 @@ const Specialists = () => {
     const [TimeSheets, setTimeSheets] = useState<TimsheetsProps[]>([]);
     const [Services, setServices] = useState<ServicesProps[]>([]);
     //axios to call api and get data
-    const getDataFromServer = async () => {
+    const getDataFromServer = async (page:any,range:any) => {
       try {
-        const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/web/timesheets');
+        const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/web/timesheets?page='+page+'&range='+range);
         const mappedData = serializedDataTimeSheets(response.data);
         await setTimeSheets(mappedData.timesheets);
         await setSpecialists(mappedData.specialists);
@@ -46,8 +61,8 @@ const Specialists = () => {
 
     useEffect(() => {
       setLoadingState(true);
-      getDataFromServer();
-    }, []);
+      getDataFromServer(activeWeek,DaysShow);
+    }, [activeWeek,DaysShow]);
 
     const [selectedSpeciality, setSelectedSpeciality] = useState<ServicesProps|undefined|null>(null);
 
@@ -133,7 +148,7 @@ const Specialists = () => {
       <>
         <Navbar/>
         <LayoutComponent step={1}>
-          <WeekDayComponent activeDay={activeDay} onChangeDay={handleChangeDay}/>
+          <WeekDayComponent activeDay={activeDay} onChangeDay={handleChangeDay} daysShow={DaysShow} activeWeek={activeWeek} onChangeActiveWeek={ChangeActiveWeek}/>
           <Menu as="div" className="sm:mx-4 mt-4 px-8 w-full flex justify-start relative inline-block text-left">
                   <div>
                     <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-tertiary px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-primary hover:bg-primary hover:text-secondary">

@@ -9,6 +9,8 @@ import { Menu, Transition } from '@headlessui/react'
 import { animateScroll as scroll } from 'react-scroll';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
+import {toast} from "react-hot-toast";
+import axios from 'axios';
 
 
 interface INavigation {
@@ -69,7 +71,28 @@ const Navbar: FC = () => {
     setIsHovered(false);
   };
 
+  const closeSessionInServer = async (jwt_token:string|null) => {
+    if(jwt_token === null){
+      return;
+    }
+
+    try {
+      const config = {
+        headers: {
+          Authorization: 'Bearer '+jwt_token,
+        }
+      }
+      await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/auth/logout',config);
+      localStorage.removeItem("jwt_token");
+      toast.success("Se ha cerrado la Sesion Correctamente");
+    }catch (err) {
+      toast.error("Ha habido un error trayendo la información de usuario");
+    } 
+  }
+
   const closeSesion = () => {
+    const token = localStorage.getItem('jwt_token');
+    closeSessionInServer(token)
     dispatch({ type: 'CLEAR_USER' })
   }
 
