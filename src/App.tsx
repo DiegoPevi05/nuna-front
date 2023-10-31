@@ -27,6 +27,7 @@ function App() {
         }
       }
       const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/auth/user-profile',config);
+      console.log(response.data);
       if(response.data){
         dispatch({ type: 'SET_USER', payload: response.data })
       }
@@ -41,6 +42,8 @@ function App() {
     setLoading(true);
     const auth_cookies = getAuthCookies();
     if(Object.keys(auth_cookies).length > 0){
+      console.log(auth_cookies);
+      console.log(auth_cookies['jwt_token']);
       getUserFromServer(auth_cookies['jwt_token']);
     } 
   },[])

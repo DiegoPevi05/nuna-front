@@ -9,7 +9,7 @@ jobs:
     steps:
     - name: Initialize Deploy
       env:
-        SLACK_MESSAGE: " * Initialize deploy of La Nonna Rose to Hostinger Server :git:"
+        SLACK_MESSAGE: " * Initialize deploy of Nuna to Hostinger Server :git:"
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       run: |
         echo "${SLACK_MESSAGE}"
