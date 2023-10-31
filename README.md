@@ -19,8 +19,6 @@ Welcome to the Front-End WebPage of Nuna! This landing page is deisgined to show
 
 - **Specilist Order:** The landing page has a option to request services of specialist this is connected to the backend [nuna](https://nuna.com.pe/server/home).
 
-- 
-
 ## Dependencies and Libraries
 
 This project relies on the following key dependencies and libraries:

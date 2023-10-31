@@ -18,15 +18,20 @@ function App() {
   const [Loading,setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   //axios to call api and get data
-  const getUserFromServer = async (xsrf_token:string, session:string) => {
+  const getUserFromServer = async (jwt_token:string) => {
     try {
-      console.log(xsrf_token)
-      console.log(session)
-      //const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/web/timesheets');
-      //console.log(response.data)
-      dispatch({ type: 'SET_USER', payload: {id:1, name:"Diego Pena Vicente", email:"diego10azul@hotmail.com"} })
+      const config = {
+        headers: {
+          Authorization: 'Bearer '+jwt_token,
+        }
+      }
+      const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/auth/user-profile',config);
+      if(response.data){
+        dispatch({ type: 'SET_USER', payload: response.data })
+      }
     }catch (err) {
-      toast.error("Ha habido un error trayendo la información del servidor");
+      console.log(err.message)
+      toast.error("Ha habido un error trayendo la información de usuario");
     }finally{
       setLoading(false);
     }
@@ -36,10 +41,8 @@ function App() {
     setLoading(true);
     const auth_cookies = getAuthCookies();
     if(Object.keys(auth_cookies).length > 0){
-      getUserFromServer(auth_cookies['XSRF-TOKEN'],auth_cookies['nuna_session']);
-    }else{
-      getUserFromServer(auth_cookies['XSRF-TOKEN'],auth_cookies['nuna_session']);
-    }  
+      getUserFromServer(auth_cookies['jwt_token']);
+    } 
   },[])
 
   return (

@@ -169,7 +169,7 @@ export const getAuthCookies = () => {
         const cookie = cookies[i].trim();
 
         // Check if the cookie starts with the specified names
-        if (cookie.startsWith('nuna_session=') || cookie.startsWith('XSRF-TOKEN=')) {
+        if (cookie.startsWith('jwt_token=')) {
             const [name, value] = cookie.split('=');
             specificCookies[name] = value;
         }
@@ -178,12 +178,3 @@ export const getAuthCookies = () => {
     return specificCookies;
 }
 
-export const deleteAuthCookies = () => {
-    const cookies = getAuthCookies();
-
-    for (const cookieName in cookies) {
-        if (cookies.hasOwnProperty(cookieName)) {
-            document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-        }
-    }
-}
