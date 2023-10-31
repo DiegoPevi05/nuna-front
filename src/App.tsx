@@ -11,6 +11,7 @@ import {HashRouter as Router, Routes, Route} from 'react-router-dom';
 import {getAuthCookies} from './lib/utils';
 import {toast} from "react-hot-toast";
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
 
 function App() {
@@ -30,7 +31,6 @@ function App() {
         dispatch({ type: 'SET_USER', payload: response.data })
       }
     }catch (err) {
-      console.log(err.message)
       toast.error("Ha habido un error trayendo la información de usuario");
     }finally{
       setLoading(false);
