@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "./Button";
 import { useSelector } from "react-redux";
 import CartMenu from "./Cart";
