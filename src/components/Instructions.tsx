@@ -1,5 +1,8 @@
 // @ts-ignore
-import { VerticalTimeline, VerticalTimelineElement} from "react-vertical-timeline-component";
+import {
+  VerticalTimeline,
+  VerticalTimelineElement,
+} from "react-vertical-timeline-component";
 import { motion } from "framer-motion";
 
 // @ts-ignore
@@ -8,12 +11,19 @@ import "react-vertical-timeline-component/style.min.css";
 import { styles } from "../styles";
 import { SectionWrapper } from "./ui/hoc";
 import { textVariant } from "../lib/motions";
-import { User,GraduationCap, CreditCard } from 'lucide-react';
+import { User, GraduationCap, CreditCard, LucideProps } from "lucide-react";
 
-const stepsData = [
+interface StepDataInterface {
+  title: string;
+  icon: LucideProps;
+  iconBg: string;
+  description: string;
+}
+
+const stepsData: StepDataInterface[] = [
   {
     title: "1.-Regístrese",
-    icon: <User/>,
+    icon: <User />,
     iconBg: "#ecdccc",
     description: "Cree una cuenta en Nuna.",
   },
@@ -21,7 +31,8 @@ const stepsData = [
     title: "2.-Encuentre a su especialista",
     icon: <GraduationCap />,
     iconBg: "#ecdccc",
-    description: "En Nuna, usted tendrá acceso a profesionales calificados independientemente de la distancia. Realice una búsqueda y use los filtros para encontrar los especialistas más adecuado a sus necesidades.",
+    description:
+      "En Nuna, usted tendrá acceso a profesionales calificados independientemente de la distancia. Realice una búsqueda y use los filtros para encontrar los especialistas más adecuado a sus necesidades.",
   },
   {
     title: "3.-Agende su cita y proceda con el pago",
@@ -31,7 +42,7 @@ const stepsData = [
   },
 ];
 
-const InstructionStepCard = ({ step }:any) => {
+const InstructionStepCard = ({ step }: any) => {
   return (
     <VerticalTimelineElement
       contentStyle={{
@@ -43,7 +54,7 @@ const InstructionStepCard = ({ step }:any) => {
       icon={step.icon}
     >
       <div>
-        <h3 className='text-[24px] font-bold'>{step.title}</h3>
+        <h3 className="text-[24px] font-bold">{step.title}</h3>
         <p className="text-[14px]">{step.description}</p>
       </div>
     </VerticalTimelineElement>
@@ -62,13 +73,10 @@ const Instructions = () => {
         </p>
       </motion.div>
 
-      <div className='mt-20 flex flex-col'>
+      <div className="mt-20 flex flex-col">
         <VerticalTimeline>
           {stepsData.map((step, index) => (
-            <InstructionStepCard
-              key={`step-${index}`}
-              step={step}
-            />
+            <InstructionStepCard key={`step-${index}`} step={step} />
           ))}
         </VerticalTimeline>
       </div>
