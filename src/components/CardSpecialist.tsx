@@ -63,6 +63,8 @@ const SpecialistsCard = (props: SpecialistPropsCard) => {
   const [UnitSession, setUnitSession] = useState<Session>({
     service_id: 0,
     service_name: "",
+    specialist_id: 0,
+    specialist_name: "",
     datetime: new Date(),
     option: { id: 0, price: 0, duration: 0 },
   });
@@ -76,6 +78,8 @@ const SpecialistsCard = (props: SpecialistPropsCard) => {
         ...prevUnitSession,
         service_id: service.id_service,
         service_name: service.name_service,
+        specialist_name: specialist.name,
+        specialist_id: specialist.id,
       }));
       setServiceSelected(service.id_service);
     },
@@ -136,6 +140,8 @@ const SpecialistsCard = (props: SpecialistPropsCard) => {
       onSetSession(UnitSession);
       setUnitSession({
         service_id: 0,
+        specialist_id: 0,
+        specialist_name: "",
         service_name: "",
         datetime: new Date(),
         option: { id: 0, price: 0, duration: 0 },
