@@ -66,7 +66,7 @@ const Confirmation = () => {
 
       const response = await axios.get(
         import.meta.env.VITE_BACKEND_URL +
-          "/api/web/sessions?" +
+          "/api/web/sessions?externalReference=" +
           externalReference,
         config,
       );
