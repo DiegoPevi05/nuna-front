@@ -53,10 +53,10 @@ const Payment = () => {
       return;
     }
 
-    /*if (!user) {
+    if (!user) {
       toast.error("Tienes que Iniciar Session para poder pagar");
       return;
-    }*/
+    }
 
     createOrderToServer();
   }, [sessions]);
@@ -111,27 +111,24 @@ const Payment = () => {
   };
 
   const createOrderToServer = async () => {
-    //const jwt_token = localStorage.getItem("jwt_token");
+    const jwt_token = localStorage.getItem("jwt_token");
     try {
-      /*const config = {
+      const config = {
         headers: {
           Authorization: "Bearer " + jwt_token,
         },
-      };*/
+      };
 
       const body = {
         sessions: sessions,
         discount: discountCode,
       };
 
-      console.log(body);
-
       const response = await axios.post(
         import.meta.env.VITE_BACKEND_URL + "/api/web/make-order",
         body,
-        // config,
+        config,
       );
-      //toast.success("Procesando");
       const redirectUrl = response.data.init_point; // assuming this is the URL you want to redirect to
       if (redirectUrl) {
         window.location.href = redirectUrl; // This will redirect to the external URL
@@ -140,7 +137,7 @@ const Payment = () => {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response) {
-          toast.error(error.response.data.message);
+          toast.error(error.response.data.messages);
           console.log(error.response.data);
         } else {
           toast.error("Ha habido un problema validando la solicitud");
@@ -181,7 +178,7 @@ const Payment = () => {
           >
             <div className="w-full sm:w-1/2 h-auto flex flex-col">
               <h2 className={`${styles.heroSubText}`}>Hola </h2>
-              {!user ? (
+              {user ? (
                 <>
                   <p className={`${styles.cardSubHeadText} text-secondary`}>
                     {"Aplica un codigo de descuento si tienes"}
