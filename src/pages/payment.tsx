@@ -53,10 +53,10 @@ const Payment = () => {
       return;
     }
 
-    if (!user) {
+    /*if (!user) {
       toast.error("Tienes que Iniciar Session para poder pagar");
       return;
-    }
+    }*/
 
     createOrderToServer();
   }, [sessions]);
@@ -64,7 +64,7 @@ const Payment = () => {
   const [discountCode, setDiscountCode] = useState<DiscountProps>({
     discount_id: 0,
     discount_code: "",
-    discount_amount: 1,
+    discount_amount: 0,
   });
 
   const handleChangeDiscount = (event: any) => {
@@ -111,31 +111,56 @@ const Payment = () => {
   };
 
   const createOrderToServer = async () => {
-    const jwt_token = localStorage.getItem("jwt_token");
+    //const jwt_token = localStorage.getItem("jwt_token");
     try {
-      const config = {
+      /*const config = {
         headers: {
           Authorization: "Bearer " + jwt_token,
         },
-      };
+      };*/
 
       const body = {
         sessions: sessions,
         discount: discountCode,
       };
 
-      await axios.post(
-        import.meta.env.VITE_BACKEND_URL + "/make-order",
+      console.log(body);
+
+      const response = await axios.post(
+        import.meta.env.VITE_BACKEND_URL + "/api/web/make-order",
         body,
-        config,
+        // config,
       );
-      toast.success("Procesando");
-      //console.log(response.data)
-    } catch (err) {
-      toast.error("Ha habido un error trayendo la información del servidor");
+      //toast.success("Procesando");
+      const redirectUrl = response.data.init_point; // assuming this is the URL you want to redirect to
+      if (redirectUrl) {
+        window.location.href = redirectUrl; // This will redirect to the external URL
+        // or use history.push('/your-internal-route') for internal navigation
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+          console.log(error.response.data);
+        } else {
+          toast.error("Ha habido un problema validando la solicitud");
+        }
+      }
     } finally {
       setLoadingProcess(false);
     }
+  };
+
+  const calculateTotalAmountWithDiscount = () => {
+    let discountedPrice = Number(calculateTotalAmount(sessions));
+
+    if (discountCode.discount_amount < 100) {
+      discountedPrice =
+        discountedPrice * (1 - discountCode.discount_amount / 100);
+    } else {
+      discountedPrice = 0;
+    }
+    return discountedPrice;
   };
 
   return (
@@ -156,7 +181,7 @@ const Payment = () => {
           >
             <div className="w-full sm:w-1/2 h-auto flex flex-col">
               <h2 className={`${styles.heroSubText}`}>Hola </h2>
-              {user ? (
+              {!user ? (
                 <>
                   <p className={`${styles.cardSubHeadText} text-secondary`}>
                     {"Aplica un codigo de descuento si tienes"}
@@ -181,7 +206,7 @@ const Payment = () => {
                     </Button>
                   </div>
                   <h2 className={`${styles.heroBlockText} font-bold`}>
-                    {user.name}
+                    {user?.name}
                   </h2>
                   <p className={`${styles.cardSubHeadText} text-secondary`}>
                     {"Aqui puedes ver el total de tu pedido"}
@@ -190,10 +215,7 @@ const Payment = () => {
                     El Total es
                   </h2>
                   <h2 className={`${styles.heroSubText}`}>
-                    {"S/." +
-                      calculateTotalAmount(sessions) *
-                        (discountCode.discount_amount / 100) +
-                      ".00"}
+                    {"S/." + calculateTotalAmountWithDiscount() + ".00"}
                   </h2>
                   <p className={`${styles.cardSubHeadText} text-secondary`}>
                     {"Haz click en ir a pagar para realizar el pago"}
