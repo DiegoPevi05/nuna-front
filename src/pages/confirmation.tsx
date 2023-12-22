@@ -8,14 +8,13 @@ import { fadeIn } from "../lib/motions";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { formatDayinString, formatTimeinString } from "../lib/utils";
 import { Link } from "../components/ui/Button";
 import axios from "axios";
 
 interface ResponseSessions {
   specialist_name: string;
   service_name: string;
-  date_meet: Date;
+  date_meet: string;
   duration: number;
   link_meet: string;
 }
@@ -70,7 +69,7 @@ const Confirmation = () => {
           externalReference,
         config,
       );
-      setSessions(response.data);
+      setSessions(response.data.meets);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response) {
@@ -144,7 +143,7 @@ const Confirmation = () => {
                 Tus Sesiones
               </h2>
               <ul className="w-full max-h-[400px] overflow-y-auto">
-                {sessions?.map((session: any, index: number) => {
+                {sessions.map((session: any, index: number) => {
                   return (
                     <li
                       key={"session_item_" + index}
@@ -179,7 +178,7 @@ const Confirmation = () => {
                           {"Fecha de Sesion:"}
                         </p>
                         <p className={`${styles.cardBodyText}`}>
-                          {formatDayinString(session.datetime)}
+                          {session.date_meet.split(" ")[0]}
                         </p>
                       </div>
                       <div className="flex flex-row gap-2">
@@ -187,16 +186,20 @@ const Confirmation = () => {
                           {"Hora de Sesion:"}
                         </p>
                         <p className={`${styles.cardBodyText}`}>
-                          {formatTimeinString(session.datetime)}
+                          {session.date_meet.split(" ")[1]}
                         </p>
                       </div>
                       <div className="flex flex-row gap-2">
                         <p className={`${styles.cardBodyText} font-bold`}>
                           {"Link de la Reunion:"}
                         </p>
-                        <p className={`${styles.cardBodyText}`}>
-                          {session.link_meet}
-                        </p>
+                        <a
+                          className={`${styles.cardBodyText} hover:underline`}
+                          href={session.link_meet}
+                          target="_blank"
+                        >
+                          {"Enlace de la reunion"}
+                        </a>
                       </div>
                     </li>
                   );
